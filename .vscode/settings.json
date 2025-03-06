@@ -15,6 +15,7 @@
         "dotenv",
         "fastparquet",
         "geopandas",
+        "github",
         "gitlab",
         "icrawler",
         "kubernetes",
