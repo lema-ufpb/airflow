@@ -20,7 +20,7 @@ This custom Airflow implementation provides a containerized environment for orch
 ## 🚀 Usage
 
 ```bash
-docker build -t airflow .
+docker compose up -d
 ```
 
 ## Contributing

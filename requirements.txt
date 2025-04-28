@@ -7,6 +7,7 @@ apache-airflow-providers-redis>=3.3.2
 apache-airflow-providers-apache-spark>=4.3.0
 apache-airflow-providers-cncf-kubernetes>=7.7.0
 apache-airflow-providers-celery>=3.5.1
+authlib>=1.0.0
 pydantic>=2.4.2
 python-dotenv>=1.0.0
 pandas>=1.5.3
