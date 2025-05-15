@@ -6,8 +6,8 @@ stages:
 
 variables:
   IMAGE_NAME: "airflow"
-  DOCKER_HOST: tcp://docker:2376
-  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_HOST: tcp://docker:2375  
+  DOCKER_TLS_CERTDIR: "" 
   IMAGE_TAG: "$HARBOR_REGISTRY/public/$IMAGE_NAME"
   GIT_DEPTH: 0
 
