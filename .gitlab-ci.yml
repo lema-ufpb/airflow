@@ -19,8 +19,6 @@ services:
 build:
   stage: build
   before_script: |
-      echo "Usuário: [$HARBOR_PUB_ROBOT_USER]"
-      echo "Comprimento da senha: ${#HARBOR_PUB_ROBOT_PASSWORD}"
       echo "$HARBOR_PUB_ROBOT_PASSWORD" | docker login --username "$HARBOR_PUB_ROBOT_USER" --password-stdin "$HARBOR_REGISTRY"
   script:
     - echo "🚀 Build version $CI_COMMIT_TAG"
