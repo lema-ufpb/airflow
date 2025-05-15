@@ -24,10 +24,10 @@ build:
         --no-push \
         --destination "$IMAGE_TAG:latest" \
         --tarPath ./tar_images/image_file.tar
-  cache:
+  artifacts:
     paths:
       - tar_images/
-    when: on_success
+    expire_in: 1 hour
   tags:
     - lema
     - default
