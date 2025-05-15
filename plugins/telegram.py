@@ -1,11 +1,15 @@
 import os
 import requests
 
-TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
-CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
+TELEGRAM_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", None)
+CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", None)
 
 
 def telegram_success_alert(context):
+
+    if not TELEGRAM_TOKEN or not CHAT_ID:
+        return "Running in development mode"
+
     task_instance = context.get("task_instance")
     dag_id = context.get("dag").dag_id
     task_id = task_instance.task_id
@@ -17,7 +21,7 @@ def telegram_success_alert(context):
 *DAG*: `{dag_id}`
 *Task*: `{task_id}`
 *Date*: `{execution_date}`
-[🔍 See log]({log_url})
+🔍 See log: <a href='{log_url}'>{log_url}</a>
 """.strip()
 
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
@@ -35,6 +39,10 @@ def telegram_success_alert(context):
 
 
 def telegram_error_alert(context):
+
+    if not TELEGRAM_TOKEN or not CHAT_ID:
+        return "Running in development mode"
+
     task_instance = context.get("task_instance")
     dag_id = context.get("dag").dag_id
     task_id = task_instance.task_id
@@ -46,7 +54,7 @@ def telegram_error_alert(context):
 *DAG*: `{dag_id}`
 *Task*: `{task_id}`
 *Date*: `{execution_date}`
-[🔍 See log]({log_url})
+🔍 See log: <a href='{log_url}'>{log_url}</a>
 """.strip()
 
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
