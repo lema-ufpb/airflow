@@ -30,6 +30,7 @@ build-and-push:
 
 pages:
   stage: pages
+  image: alpine/git
   script: |
     echo "🚀 Publish release page"
     TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
