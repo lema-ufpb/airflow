@@ -6,7 +6,6 @@ stages:
 
 variables:
   IMAGE_NAME: "airflow"
-  VERSION: "2.10.5-python3.11-spark3.5.5"
   DOCKER_HOST: tcp://docker:2376
   DOCKER_TLS_CERTDIR: "/certs"
   IMAGE_TAG: "$HARBOR_REGISTRY/public/$IMAGE_NAME"
@@ -20,7 +19,7 @@ services:
 build:
   stage: build
   before_script:
-    - echo "$HARBOR_PUB_ROBOT_PASSWORD" | docker login --username "$HARBOR_PUB_ROBOT_USER" --password-stdin "$HARBOR_REGISTRY"
+    - echo $HARBOR_PUB_ROBOT_PASSWORD | docker login --username $HARBOR_PUB_ROBOT_USER --password-stdin $HARBOR_REGISTRY
   script:
     - echo "🚀 Build version $CI_COMMIT_TAG"
     - mkdir -p ./tar_images
@@ -39,13 +38,13 @@ build:
 push:
   stage: push
   before_script:
-    - echo "$HARBOR_PUB_ROBOT_PASSWORD" | docker login --username "$HARBOR_PUB_ROBOT_USER" --password-stdin "$HARBOR_REGISTRY"
+    - echo $HARBOR_PUB_ROBOT_PASSWORD | docker login --username $HARBOR_PUB_ROBOT_USER --password-stdin $HARBOR_REGISTRY
   script:
     - echo "🚀 Push version $CI_COMMIT_TAG"
     - docker image load --input ./tar_images/image_file.tar
     - docker push $IMAGE_TAG:latest
-    - docker image tag $IMAGE_TAG:latest $IMAGE_TAG:$VERSION
-    - docker push $IMAGE_TAG:$VERSION
+    - docker image tag $IMAGE_TAG:latest $IMAGE_TAG:$CI_COMMIT_TAG
+    - docker push $IMAGE_TAG:$CI_COMMIT_TAG
     - docker push $IMAGE_TAG:latest
   cache:
     paths:
