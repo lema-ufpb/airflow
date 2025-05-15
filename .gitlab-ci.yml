@@ -1,7 +1,6 @@
 # Pipeline stages
 stages:
   - build
-  - push
   - pages
 
 variables:
@@ -9,45 +8,20 @@ variables:
   IMAGE_TAG: "$HARBOR_REGISTRY/public/$IMAGE_NAME"
   GIT_DEPTH: 0
 
-build:
+build-and-push:
   stage: build
   image:
     name: gcr.io/kaniko-project/executor:debug
     entrypoint: [""]
   script:
     - |
-      mkdir -p ./tar_images
+      echo "{\"auths\":{\"$HARBOR_REGISTRY\":{\"username\":\"$HARBOR_PUB_ROBOT_USER\",\"password\":\"$HARBOR_PUB_ROBOT_PASSWORD\"}}}" > /kaniko/.docker/config.json
       /kaniko/executor \
         --context "${CI_PROJECT_DIR}" \
         --dockerfile "${CI_PROJECT_DIR}/Dockerfile" \
         --build-arg "VERSION=${CI_COMMIT_SHORT_SHA}" \
-        --no-push \
         --destination "$IMAGE_TAG:latest" \
-        --tarPath ./tar_images/image_file.tar
-  artifacts:
-    paths:
-      - tar_images/
-    expire_in: 1 hour
-  tags:
-    - lema
-    - default
-  only:
-    - tags
-
-push:
-  stage: push
-  image:
-    name: gcr.io/go-containerregistry/crane:debug
-    entrypoint: [""]
-  script:
-    - |
-      cd ./tar_images
-      crane auth login -u $HARBOR_PUB_ROBOT_USER -p $HARBOR_PUB_ROBOT_PASSWORD $HARBOR_REGISTRY;
-      crane push image_file.tar $IMAGE_TAG:$CI_COMMIT_TAG;
-      crane push image_file.tar $IMAGE_TAG:latest;
-  cache:
-    paths:
-      - tar_images/
+        --destination "$IMAGE_TAG:$CI_COMMIT_TAG"
   tags:
     - lema
     - default
