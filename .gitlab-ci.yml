@@ -6,25 +6,24 @@ stages:
 
 variables:
   IMAGE_NAME: "airflow"
-  DOCKER_HOST: tcp://docker:2375  
-  DOCKER_TLS_CERTDIR: "" 
   IMAGE_TAG: "$HARBOR_REGISTRY/public/$IMAGE_NAME"
   GIT_DEPTH: 0
 
-image: docker:latest
-
-services:
-  - docker:dind
-
 build:
   stage: build
-  before_script: |
-      echo "$HARBOR_PUB_ROBOT_PASSWORD" | docker login --username "$HARBOR_PUB_ROBOT_USER" --password-stdin "$HARBOR_REGISTRY"
+  image:
+    name: gcr.io/kaniko-project/executor:debug
+    entrypoint: [""]
   script:
-    - echo "🚀 Build version $CI_COMMIT_TAG"
-    - mkdir -p ./tar_images
-    - docker build --build-arg VERSION=$CI_COMMIT_TAG --tag $IMAGE_TAG:latest .
-    - docker save $IMAGE_TAG:latest > ./tar_images/image_file.tar
+    - |
+      mkdir -p ./tar_images
+      /kaniko/executor \
+        --context "${CI_PROJECT_DIR}" \
+        --dockerfile "${CI_PROJECT_DIR}/Dockerfile" \
+        --build-arg "VERSION=${CI_COMMIT_SHORT_SHA}" \
+        --no-push \
+        --destination "$IMAGE_TAG:latest" \
+        --tarPath ./tar_images/image_file.tar
   cache:
     paths:
       - tar_images/
@@ -37,15 +36,15 @@ build:
 
 push:
   stage: push
-  before_script:
-    - echo "$HARBOR_PUB_ROBOT_PASSWORD" | docker login --username "$HARBOR_PUB_ROBOT_USER" --password-stdin "$HARBOR_REGISTRY"
+  image:
+    name: gcr.io/go-containerregistry/crane:debug
+    entrypoint: [""]
   script:
-    - echo "🚀 Push version $CI_COMMIT_TAG"
-    - docker image load --input ./tar_images/image_file.tar
-    - docker push $IMAGE_TAG:latest
-    - docker image tag $IMAGE_TAG:latest $IMAGE_TAG:$CI_COMMIT_TAG
-    - docker push $IMAGE_TAG:$CI_COMMIT_TAG
-    - docker push $IMAGE_TAG:latest
+    - |
+      cd ./tar_images
+      crane auth login -u $HARBOR_PUB_ROBOT_USER -p $HARBOR_PUB_ROBOT_PASSWORD $HARBOR_REGISTRY;
+      crane push image_file.tar $IMAGE_TAG:$CI_COMMIT_TAG;
+      crane push image_file.tar $IMAGE_TAG:latest;
   cache:
     paths:
       - tar_images/
