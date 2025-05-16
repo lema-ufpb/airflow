@@ -2,6 +2,7 @@
 stages:
   - build
   - pages
+  - test
 
 variables:
   IMAGE_NAME: "airflow"
@@ -47,9 +48,11 @@ pages:
 
 test:
   stage: test
+  image: alpine/git
   script: |
-     mkdir public
-     echo '{ "status": "ok" }' > public/index.json
+    echo "🚀 Publish release page"
+    mkdir public
+    echo '{ "status": "ok" }' > public/index.json
   artifacts:
     paths:
       - public
