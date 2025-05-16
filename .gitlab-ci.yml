@@ -52,7 +52,7 @@ test:
   script: |
     echo "🚀 Publish release page"
     mkdir public
-    echo '{ "status": "ok" }' > public/index.json
+    echo 'ok' > public/index.html
   artifacts:
     paths:
       - public
