@@ -1,4 +1,3 @@
-# Pipeline stages
 stages:
   - build
   - publish
