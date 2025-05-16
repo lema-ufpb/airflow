@@ -33,6 +33,7 @@
         "nginx",
         "nltk",
         "openpyxl",
+        "openssh",
         "postgres",
         "postgresdb",
         "postgresql",

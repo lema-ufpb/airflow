@@ -1,7 +1,6 @@
 # Pipeline stages
 stages:
   - build
-  - pages
   - test
 
 variables:
@@ -29,33 +28,23 @@ build-and-push:
   only:
     - tags
 
-pages:
-  stage: pages
-  image: alpine/git
-  script: |
-    echo "🚀 Publish release page"
-    TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
-    mkdir -p public
-    echo "{ \"last_release\": \"$TAG\" }" > public/index.json
-  artifacts:
-    paths:
-      - public
-  tags:
-    - lema
-    - default
-  only:
-    - tags
-
 test:
   stage: test
-  image: alpine
+  image: alpine:latest
+  before_script: |
+    apk add --no-cache openssh rsync
+    mkdir -p ~/.ssh
+    echo "${SSH_PRIVATE_KEY}" > ~/.ssh/id_rsa
+    chmod 700 ~/.ssh
+    chmod 600 ~/.ssh/id_rsa
   script: |
-    echo "🚀 Publish release page"
-    mkdir public
-    echo 'ok' > public/index.html
-  artifacts:
-    paths:
-      - public
+    echo "🚀 Publish release "
+    TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
+    echo "{ \"last_release\": \"$TAG\" }" > airflow.json
+    rsync -avz \
+      --no-perms --no-owner --no-group --no-times \
+      -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ~/.ssh/id_rsa" \
+      "airflow.json" "$SSH_USERNAME@$NGINX_DATA_HOST:$NGINX_HTML_DIR/airflow.json"
   tags:
     - lema
     - default
