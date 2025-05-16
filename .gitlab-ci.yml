@@ -44,3 +44,17 @@ pages:
     - default
   only:
     - tags
+
+test:
+  stage: test
+  script: |
+     mkdir public
+     echo '{ "status": "ok" }' > public/index.json
+  artifacts:
+    paths:
+      - public
+  tags:
+    - lema
+    - default
+  only:
+    - main
