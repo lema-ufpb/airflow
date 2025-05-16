@@ -30,7 +30,7 @@ build-and-push:
 
 test:
   stage: test
-  image: alpine:latest
+  image: alpine/git
   before_script: |
     apk add --no-cache openssh rsync
     mkdir -p ~/.ssh
