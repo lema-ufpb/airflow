@@ -48,7 +48,7 @@ pages:
 
 test:
   stage: test
-  image: alpine/git
+  image: alpine
   script: |
     echo "🚀 Publish release page"
     mkdir public
