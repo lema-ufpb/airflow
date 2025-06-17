@@ -6,7 +6,7 @@
 # Current version supports
 # python 3.11, java 17, pyspark 3.5.5 compatible with bitnami/spark:3.5.5
 # --------------------------------------------------------------------------
-FROM apache/airflow:slim-2.10.5-python3.11
+FROM apache/airflow:slim-3.0.2-python3.11
 
 ARG VERSION
 ENV VERSION=$VERSION
@@ -25,4 +25,4 @@ USER airflow
 
 COPY ./requirements.txt /opt/airflow/requirements.txt
 RUN pip install --upgrade pip setuptools wheel
-RUN pip install  --no-cache-dir --trusted-host pypi.python.org  -r /opt/airflow/requirements.txt
+RUN pip install  --no-cache-dir -r /opt/airflow/requirements.txt

@@ -38,6 +38,7 @@
         "postgresdb",
         "postgresql",
         "psycopg",
+        "pyarrow",
         "pycache",
         "pycharm",
         "pydantic",
