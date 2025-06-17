@@ -1,5 +1,6 @@
 {
     "cSpell.words": [
+        "apiserver",
         "aquasec",
         "authlib",
         "Autoscaler",
@@ -50,6 +51,7 @@
         "pyvenv",
         "scikit",
         "scipy",
+        "SETSID",
         "setuptools",
         "statsd",
         "trivy",
