@@ -10,6 +10,8 @@ FROM apache/airflow:3.0.2-python3.11
 
 ARG VERSION
 ENV VERSION=$VERSION
+ENV PYTHONPATH=/opt/airflow/dags
+ENV PYTHONPATH="/opt/airflow/dags:${PYTHONPATH}"
 
 USER root
 
