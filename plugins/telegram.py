@@ -14,14 +14,12 @@ def telegram_success_alert(context):
     dag_id = context.get("dag").dag_id
     task_id = task_instance.task_id
     execution_date = context.get("execution_date")
-    log_url = task_instance.log_url
 
     message = f"""
 ✅ *Airflow: Task finished successfully!*
 *DAG*: `{dag_id}`
 *Task*: `{task_id}`
 *Date*: `{execution_date}`
-🔍 See log: <a href='{log_url}'>{log_url}</a>
 """.strip()
 
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
@@ -47,14 +45,12 @@ def telegram_error_alert(context):
     dag_id = context.get("dag").dag_id
     task_id = task_instance.task_id
     execution_date = context.get("execution_date")
-    log_url = context.get("task_instance").log_url
 
     message = f"""
 ⚠️ *Airflow: Task failed!*
 *DAG*: `{dag_id}`
 *Task*: `{task_id}`
 *Date*: `{execution_date}`
-🔍 See log: <a href='{log_url}'>{log_url}</a>
 """.strip()
 
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
