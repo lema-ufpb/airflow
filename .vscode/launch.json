@@ -1,0 +1,13 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Build and Run Airflow",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/.vscode/main.py",
+            "preLaunchTask": "docker-build",
+            "postDebugTask": "docker-compose-up"
+        }
+    ]
+}
