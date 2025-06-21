@@ -14,12 +14,13 @@ x-airflow-common: &airflow-common
     AIRFLOW__CORE__EXECUTION_API_SERVER_URL: "http://airflow-apiserver:8080/execution/"
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: "true"
     AIRFLOW_VAR_DATA_DIR: "/opt/airflow/data"
-    AIRFLOW__CORE__PYTHONPATH: "/opt/airflow/dags"
     AIRFLOW__CORE__SIMPLE_AUTH_MANAGER_ALL_ADMINS: "true"
     AIRFLOW__WEBSERVER__SIMPLE_AUTH_MANAGER_USERS: "airflow:admin"
     AIRFLOW__API_AUTH__JWT_SECRET: "891b3faded3f6bb754a352c8566b2b90becf3d"
   volumes:
     - ./dags:/opt/airflow/dags
+    - ./logs:/opt/airflow/logs
+    - ./plugins:/opt/airflow/plugins
   user: "50000:0"
   image: "airflow-test"
   depends_on: &airflow-common-depends-on

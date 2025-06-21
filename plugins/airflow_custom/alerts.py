@@ -9,8 +9,16 @@ CHAT_ID = os.getenv("TELEGRAM_CHAT_ID", None)
 
 
 def telegram_alert(message):
+    """
+    Send a message to a Telegram chat using the bot API.
+    Args:
+        message (str): The message to send.
+    Raises:
+        Exception: If there is an error sending the message.
+    """
 
     if not TELEGRAM_TOKEN or not CHAT_ID:
+        log.info(message)
         return message
 
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
@@ -22,18 +30,25 @@ def telegram_alert(message):
     }
 
     try:
-        log.info(f"Sending Telegram message...")
+        log.info(f"Sending message to Telegram...")
         requests.post(url, data=payload, timeout=10)
     except Exception as e:
-        log.error(f"Error on send message: {e}")
+        raise Exception(f"Error on send message: {e}")
 
 
 def telegram_success_alert(context):
+    """
+    Send a success alert to Telegram when a task finishes successfully.
+    Args:
+        context (dict): The context dictionary provided by Airflow.
+    Raises:
+        Exception: If there is an error sending the alert.
+    """
 
     task_instance = context.get("task_instance")
     dag_id = context.get("dag").dag_id
     task_id = task_instance.task_id
-    execution_date = context.get("execution_date")
+    execution_date = task_instance.start_date
 
     message = f"""
 ✅ *Airflow: Task finished successfully!*
@@ -46,11 +61,18 @@ def telegram_success_alert(context):
 
 
 def telegram_error_alert(context):
+    """
+    Send an error alert to Telegram when a task fails.
+    Args:
+        context (dict): The context dictionary provided by Airflow.
+    Raises:
+        Exception: If there is an error sending the alert.
+    """
 
     task_instance = context.get("task_instance")
     dag_id = context.get("dag").dag_id
     task_id = task_instance.task_id
-    execution_date = context.get("execution_date")
+    execution_date = task_instance.start_date
 
     message = f"""
 ❌ *Airflow: Task failed!*
