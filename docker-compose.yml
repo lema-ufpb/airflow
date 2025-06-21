@@ -21,7 +21,7 @@ x-airflow-common: &airflow-common
   volumes:
     - ./dags:/opt/airflow/dags
   user: "50000:0"
-  image: "harbor.lema.ufpb.br/public/airflow:v3.0.2-python3.11-spark3.5.5"
+  image: "airflow-test"
   depends_on: &airflow-common-depends-on
     redis:
       condition: service_healthy
