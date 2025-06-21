@@ -24,6 +24,14 @@ docker build -t airflow-test .
 docker compose up -d
 ```
 
+## 🚀 Deployment
+
+```bash
+git push origin main
+git tag v3.0.2-python3.11-spark3.5.5
+git push --tags
+```
+
 ## Contributing
 
 1. Fork the repository

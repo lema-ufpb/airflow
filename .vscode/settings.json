@@ -12,6 +12,7 @@
         "cncf",
         "configmap",
         "containerregistry",
+        "dagrun",
         "dask",
         "dbfread",
         "dbgate",
