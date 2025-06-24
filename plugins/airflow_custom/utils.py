@@ -82,7 +82,7 @@ def load_config(base_path: str) -> Dict[str, dict]:
         data.setdefault("vars", {})
 
         data_dir = path.abspath(
-            path.join(path.dirname(path.dirname(base_path)), "data"))
+            path.join(path.dirname(base_path), "data"))
         data["vars"]["data_dir"] = data_dir
 
         clean_data = {str(k): v for k, v in data.items()}
