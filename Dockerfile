@@ -6,7 +6,7 @@
 # Current version supports
 # python 3.11, java 17, pyspark 3.5.5 compatible with bitnami/spark:3.5.5
 # --------------------------------------------------------------------------
-FROM apache/airflow:3.0.2-python3.11
+FROM apache/airflow:3.0.3rc3-python3.11
 
 ARG VERSION
 ENV VERSION=$VERSION

@@ -1,8 +1,6 @@
 import logging
 from os import path
 import yaml
-from secrets import token_bytes
-from datetime import datetime
 from typing import Dict
 from pathlib import Path
 
@@ -98,13 +96,14 @@ def load_config(base_path: str) -> Dict[str, dict]:
 
 def version(base_path: str) -> str:
     """Update DAG version based on git ci commit."""
-    release_file = path.join(path.dirname(base_path), "../.release")
+    release_file = path.join(path.dirname(base_path), ".release")
     try:
         with open(release_file, "r") as f:
             version = f.readline()
     except Exception:
-        version = token_bytes(3).hex()
-    return f'v{version} {datetime.now().strftime("%Y-%m-%d %H:%M")}'
+        version = "dev"
+
+    return f'{version}'
 
 
 def create_doc(base_path: str) -> str:
