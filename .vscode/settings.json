@@ -16,6 +16,7 @@
         "dask",
         "dbfread",
         "dbgate",
+        "dejson",
         "dind",
         "dotenv",
         "fastparquet",
