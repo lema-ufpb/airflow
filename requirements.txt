@@ -32,3 +32,4 @@ openpyxl
 dask
 chardet
 statsd
+py7zr

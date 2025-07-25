@@ -15,7 +15,7 @@ ENV PYTHONPATH="/opt/airflow/dags:${PYTHONPATH}"
 
 USER root
 
-RUN apt-get update && apt-get -y install --no-install-recommends unzip openjdk-17-jdk gcc wget p7zip-full build-essential python3-dev \
+RUN apt-get update && apt-get -y install --no-install-recommends unzip openjdk-17-jdk gcc wget build-essential python3-dev \
     && rm -rf /var/lib/apt/lists/* && apt-get clean
 
 ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/
