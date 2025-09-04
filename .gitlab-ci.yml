@@ -44,6 +44,6 @@ mirror_to_github:
     - git clone --mirror "$CI_REPOSITORY_URL" repo
     - cd repo
     # Adiciona o remoto do GitHub (usando token pessoal ou deploy key)
-    - git remote add github "https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${GITHUB_USERNAME}/airflow.git"
+    - git remote add github "https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/lema-ufpb/airflow.git"
   script:
     - git push github --mirror
