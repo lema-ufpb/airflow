@@ -1,5 +1,6 @@
 stages:
   - build
+  - mirror
 
 variables:
   IMAGE_NAME: "airflow"
@@ -25,3 +26,24 @@ build-and-push:
     - default
   only:
     - tags
+
+mirror_to_github:
+  stage: mirror
+  image: alpine:latest
+  tags:
+    - lema
+    - default
+  only:
+    - main
+  before_script:
+    - apk add --no-cache git openssh
+    # Configura o git
+    - git config --global user.name "GitLab CI"
+    - git config --global user.email "ci@gitlab"
+    # Clona o repositório
+    - git clone --mirror "$CI_REPOSITORY_URL" repo
+    - cd repo
+    # Adiciona o remoto do GitHub (usando token pessoal ou deploy key)
+    - git remote add github "https://${GITHUB_USERNAME}:${GITHUB_TOKEN}@github.com/${GITHUB_USERNAME}/airflow.git"
+  script:
+    - git push github --mirror
