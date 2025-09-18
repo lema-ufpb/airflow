@@ -6,7 +6,6 @@ x-airflow-common: &airflow-common
     AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://postgres:postgres@postgres/airflow
     AIRFLOW__CELERY__RESULT_BACKEND: db+postgresql://postgres:postgres@postgres/airflow
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
-    AIRFLOW_CONN_MONGO_DEFAULT: mongo://mongo:mongo@mongo:27017/?authSource=admin
     AIRFLOW__CORE__FERNET_KEY: "pMrhjIcqUNHMYRk_ZOBmMptWR6o1DahCXCKn5lEMpzM="
     AIRFLOW__API__SECRET_KEY: "891b3faded3f6bb751a452c8566b2b90becf3d"
     AIRFLOW__API_AUTH__JWT_SECRET: "231b3f1ded3f1bb754a352c8166c2b90bqcf32"
@@ -63,43 +62,6 @@ services:
     restart: unless-stopped
     networks:
       - dev
-  mongo:
-    container_name: mongo-container
-    hostname: mongo
-    image: mongo:8.0
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: mongo
-      MONGO_INITDB_ROOT_PASSWORD: mongo
-    ports:
-      - 27017:27017
-    volumes:
-      - mongodb_data:/data/db
-    restart: unless-stopped
-    networks:
-      - dev
-  dbgate:
-    image: dbgate/dbgate:6.4.1-alpine
-    container_name: dbgate
-    hostname: dbgate-webserver
-    volumes:
-      - dbgate-data:/root/.dbgate
-    ports:
-      - 3100:3000
-    environment:
-      CONNECTIONS: con1,con2,con3
-      LABEL_con1: Postgres
-      SERVER_con1: postgres
-      USER_con1: postgres
-      PASSWORD_con1: postgres
-      PORT_con1: 5432
-      ENGINE_con1: postgres@dbgate-plugin-postgres
-      LABEL_con2: MongoDB
-      URL_con2: mongodb://mongo:mongo@mongo:27017
-      ENGINE_con2: mongo@dbgate-plugin-mongo
-    restart: unless-stopped
-    networks:
-      - dev
-
   airflow-apiserver:
     <<: *airflow-common
     container_name: airflow-api-server-container
@@ -246,6 +208,4 @@ services:
 networks:
   dev:
 volumes:
-  mongodb_data:
   postgresdb_data:
-  dbgate-data:

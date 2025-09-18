@@ -28,7 +28,7 @@ docker compose up -d
 
 ```bash
 git push origin main
-git tag v3.0.2-python3.11-spark3.5.5
+git tag v3.0.6-python3.11-spark3.5.5
 git push --tags
 ```
 
@@ -47,7 +47,3 @@ For support and questions, please contact LEMA-UFPB research lab.
 ## 📝 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👏 Acknowledgments
-
-- [Hilton Ramalho](https://github.com/hiltonmbr) for the initial implementation.

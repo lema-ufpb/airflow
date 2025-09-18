@@ -1,0 +1,47 @@
+name: Build and Push
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-and-push:
+    runs-on: self-hosted
+    env:
+      REPO_NAME: airflow
+
+    outputs:
+      image_tag: ${{ steps.set-tag.outputs.image_tag }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.ref }}
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PAT }}
+
+      - name: Set image tag
+        id: set-tag
+        run: |
+          IMAGE_TAG=${GITHUB_REF#refs/tags/}
+          echo "image_tag=$IMAGE_TAG" >> $GITHUB_OUTPUT
+          echo "Using image tag: $IMAGE_TAG"
+
+      - name: Build Docker image
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${REPO_NAME}
+          docker build -t $IMAGE_NAME:latest -t $IMAGE_NAME:${{ steps.set-tag.outputs.image_tag }} .
+
+      - name: Push Docker image
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/${REPO_NAME}
+          docker push $IMAGE_NAME:latest
+          docker push $IMAGE_NAME:${{ steps.set-tag.outputs.image_tag }}
