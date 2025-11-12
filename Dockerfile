@@ -1,30 +1,34 @@
-# --------------------------------------------------------------------------
-# Python version must be the same of bitnami/spark:version
-# Pyspark version must be the same of bitnami/spark:version
-# First check python and pyspark version in bitnami/spark:version images
-# Spark > 3.4 should not compatible with spark mongodb connector 
-# Current version supports
-# python 3.11, java 17, pyspark 3.5.5 compatible with bitnami/spark:3.5.5
-# --------------------------------------------------------------------------
-FROM apache/airflow:3.0.6-python3.11
+FROM apache/airflow:3.1.2-python3.13
 
 ARG VERSION
-ENV VERSION=$VERSION
-ENV PYTHONPATH=/opt/airflow/dags
-ENV PYTHONPATH="/opt/airflow/dags:${PYTHONPATH}"
+ENV PYTHONPATH="/opt/airflow/dags"
+ENV VERSION=$VERSION \
+    PYTHONPATH="${PYTHONPATH}" \
+    JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/ \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_VERSION=2.2.1 \
+    PATH="/opt/poetry/bin:$PATH" \
+    POETRY_VIRTUALENVS_CREATE=false
 
 USER root
 
-RUN apt-get update && apt-get -y install --no-install-recommends unzip openjdk-17-jdk gcc wget build-essential python3-dev \
-    && rm -rf /var/lib/apt/lists/* && apt-get clean
-
-ENV JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64/
-RUN export JAVA_HOME 
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+    unzip \
+    openjdk-17-jdk \
+    gcc \
+    wget \
+    build-essential \
+    python3-dev \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY plugins /opt/airflow/plugins
 
-USER airflow
+COPY --chown=airflow:root pyproject.toml poetry.lock ./
 
-COPY ./requirements.txt /opt/airflow/requirements.txt
-RUN pip install --upgrade pip setuptools wheel
-RUN pip install  --no-cache-dir -r /opt/airflow/requirements.txt
+RUN curl -sSL https://install.python-poetry.org | python3 -
+
+RUN poetry install --no-root --only main
+
+USER airflow
