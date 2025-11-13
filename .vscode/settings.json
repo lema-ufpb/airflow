@@ -48,6 +48,7 @@
         "pydantic",
         "pymongo",
         "pypi",
+        "pyproject",
         "pyreaddbc",
         "pyspark",
         "pytest",
@@ -65,6 +66,7 @@
         "ufpb",
         "Unidecode",
         "venv",
+        "VIRTUALENVS",
         "webserver",
         "WEBSERVER",
         "xlrd"
