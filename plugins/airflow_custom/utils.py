@@ -1,4 +1,3 @@
-
 from os import path
 import yaml
 from typing import Dict
@@ -12,8 +11,9 @@ def load_config(base_path: str, filename: str = "parameters.yml") -> Dict[str, d
     Load configuration from a config.yml file relative to the base_path.
 
     Procura o config/parameters.yml:
-    1. No mesmo diretório de base_path
-    2. Se não existir, um nível acima
+    1. Em config/parameters.yml (relativo ao base_path)
+    2. No mesmo diretório de base_path
+    3. Se não existir, um nível acima
 
     Adiciona o campo 'data_dir' ao config['vars'] com o caminho absoluto para a pasta /data.
 
@@ -22,14 +22,18 @@ def load_config(base_path: str, filename: str = "parameters.yml") -> Dict[str, d
     if base_path in _config_cache:
         return _config_cache[base_path]
 
-    config_path = path.join(path.dirname(base_path), filename)
+    config_path = path.join(path.dirname(base_path), "config", filename)
+
+    if not path.exists(config_path):
+        config_path = path.join(path.dirname(base_path), filename)
 
     if not path.exists(config_path):
         config_path = path.join(path.dirname(
             path.dirname(base_path)), filename)
 
     if not path.exists(config_path):
-        raise FileNotFoundError(f"Config file not found")
+        raise FileNotFoundError(
+            f"File not found: {filename} searched in {path.dirname(base_path)}")
 
     try:
         with open(config_path, "r") as f:
