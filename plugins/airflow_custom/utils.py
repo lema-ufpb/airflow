@@ -1,59 +1,17 @@
-import logging
+
 from os import path
 import yaml
 from typing import Dict
 from pathlib import Path
 
-log = logging.getLogger(__name__)
 _config_cache = {}
 
 
-ANSI_STYLES = {
-    "bold": "\033[1m",
-    "red": "\033[31m",
-    "green": "\033[32m",
-    "yellow": "\033[33m",
-    "blue": "\033[34m",
-    "magenta": "\033[35m",
-    "cyan": "\033[36m",
-    "bold_red": "\033[1m\033[31m",
-    "bold_green": "\033[1m\033[32m",
-    "bold_yellow": "\033[1m\033[33m",
-    "bold_blue": "\033[1m\033[34m",
-}
-
-RESET = "\033[0m"
-
-
-def log_message(message, style="bold_green"):
-    """Log a message with a specific ANSI style."""
-    style_code = ANSI_STYLES.get(style, "")
-    log.info(f"{style_code}{message}{RESET}")
-
-
-def log_error(message):
-    """Log an error message with a specific ANSI style."""
-    style_code = ANSI_STYLES.get("bold_red", "")
-    log.error(f"❌ {style_code}{message}{RESET}")
-
-
-def log_warning(message):
-    """Log a warning message with a specific ANSI style."""
-    style_code = ANSI_STYLES.get("bold_yellow", "")
-    log.warning(f"⚠️ {style_code}{message}{RESET}")
-
-
-def log_info(message):
-    """Log an info message with a specific ANSI style."""
-    style_code = ANSI_STYLES.get("bold_green", "")
-    log.info(f"✅ {style_code}{message}{RESET}")
-
-
-def load_config(base_path: str) -> Dict[str, dict]:
+def load_config(base_path: str, filename: str = "parameters.yml") -> Dict[str, dict]:
     """
     Load configuration from a config.yml file relative to the base_path.
 
-    Procura o config.yml:
+    Procura o config/parameters.yml:
     1. No mesmo diretório de base_path
     2. Se não existir, um nível acima
 
@@ -64,14 +22,14 @@ def load_config(base_path: str) -> Dict[str, dict]:
     if base_path in _config_cache:
         return _config_cache[base_path]
 
-    config_path = path.join(path.dirname(base_path), "config.yml")
+    config_path = path.join(path.dirname(base_path), filename)
 
     if not path.exists(config_path):
         config_path = path.join(path.dirname(
-            path.dirname(base_path)), "config.yml")
+            path.dirname(base_path)), filename)
 
     if not path.exists(config_path):
-        raise FileNotFoundError(f"Config file not found near: {base_path}")
+        raise FileNotFoundError(f"Config file not found")
 
     try:
         with open(config_path, "r") as f:
