@@ -8,10 +8,10 @@ This custom Airflow implementation provides a containerized environment for orch
 
 ## ✨ Features
 
-- 🐳 Built on official Apache Airflow 3.1.2 Docker image
-- 🐍 Python 3.13 support
+- 🐳 Built on official Apache Airflow Docker image
+- 🐍 Python support
 - 📦 Poetry for dependency management
-- ☕ Java 17 (OpenJDK) for Spark integration
+- ☕ Java (OpenJDK) for Spark integration
 - 🔧 Custom configurations for LEMA-UFPB specific needs
 - 🚀 Production-ready containerized deployment
 - 📊 Web-based UI for workflow monitoring
