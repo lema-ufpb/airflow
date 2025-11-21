@@ -1,4 +1,4 @@
-FROM apache/airflow:3.1.2-python3.13
+FROM apache/airflow:3.1.3-python3.13
 
 ARG VERSION
 ENV PYTHONPATH="/opt/airflow/dags"
